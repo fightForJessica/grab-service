@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -31,9 +27,6 @@ fun SingleSwitchLine(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-
-    var checked by remember { mutableStateOf(checked) }
-
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 16.dp),

@@ -29,8 +29,8 @@ fun CustomSwitch(
     width: Dp = 42.dp,
     height: Dp = 24.dp
 ) {
-    val thumbSize = height - 4.dp
-    val thumbToBorderMargin = 2.dp
+    val thumbSize = height - 6.dp
+    val thumbToBorderMargin = 3.dp
 
     // 滑块位移
     val animateOffset by animateDpAsState(
