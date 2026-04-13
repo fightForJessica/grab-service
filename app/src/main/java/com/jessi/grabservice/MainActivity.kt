@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.jessi.grabservice.ui.Main
 import com.jessi.grabservice.ui.theme.ThemeManager
@@ -20,10 +19,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val isSystemInDarkTheme = isSystemInDarkTheme()
-            LaunchedEffect(isSystemInDarkTheme) {
-                Logger.i("MainActivity: theme update, isDark: $isSystemInDarkTheme")
-                ThemeManager.updateTheme(isSystemInDarkTheme)
-            }
+            ThemeManager.updateTheme(isSystemInDarkTheme)
+            Logger.i("MainActivity: theme isDark: $isSystemInDarkTheme")
 
             Scaffold(Modifier.Companion.fillMaxSize()) { innerPadding ->
                 Main(

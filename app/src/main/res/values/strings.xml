@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">GrabService</string>
+    <string name="app_name">抓取服务</string>
+    <string name="main_switch">总开关</string>
 </resources>
