@@ -1,5 +1,6 @@
 package com.jessi.grabservice.ui
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,43 +14,54 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jessi.grabservice.R
 import com.jessi.grabservice.model.TabModel
+import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
 import com.jessi.grabservice.ui.page.ControlPage
 import com.jessi.grabservice.ui.page.RequestPage
 import com.jessi.grabservice.ui.page.ResponsePage
 import com.jessi.grabservice.ui.theme.ThemeManager
+import com.jessi.grabservice.utils.drawableResIdToBitmap
 import com.jessi.grabservice.viewmodel.MainViewModel
 import com.jessi.grabservice.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.launch
 
 @Composable
 @Preview
 fun MainPreview() {
     Box(Modifier.fillMaxSize().background(Color.Gray)) {
-        Main(PaddingValues.Zero)
+//        Main(PaddingValues.Zero)
     }
 }
 
 @Composable
-fun Main(paddingValues: PaddingValues) {
+fun Main(
+    context: Context,
+    paddingValues: PaddingValues
+) {
     val viewModel = viewModel<MainViewModel>(factory = MainViewModelFactory())
+    val scope = rememberCoroutineScope()
 
-    // tab 信息
-    val tabList = listOf<TabModel>()
+    // tab 信息, todo fill
+    val tabList = listOf(
+        TabModel(CONTROL_PAGE_NAME, R.drawable.ic_control_page)
+    )
     var selectIndex by remember { mutableIntStateOf(0) }
 
     // 标题文本
@@ -61,6 +73,12 @@ fun Main(paddingValues: PaddingValues) {
         initialPage = selectIndex,
         pageCount = { tabList.size }
     )
+
+    LaunchedEffect(pageState.currentPage) {
+        if (pageState.currentPage != selectIndex) {
+            selectIndex = pageState.currentPage
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize().padding(paddingValues)
@@ -92,17 +110,19 @@ fun Main(paddingValues: PaddingValues) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            state = pageState
+            state = pageState,
+            beyondViewportPageCount = 2,
+            userScrollEnabled = true
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    ControlPage()
+                    ControlPage(context)
                 }
                 1 -> {
-                    RequestPage()
+                    RequestPage(context)
                 }
                 2 -> {
-                    ResponsePage()
+                    ResponsePage(context)
                 }
             }
         }
@@ -121,7 +141,12 @@ fun Main(paddingValues: PaddingValues) {
                 Tab(
                     selected = index == selectIndex,
                     onClick = {
-
+                        // 点击对应 tab 切换到目标 pager
+                        if (index != selectIndex) {
+                            scope.launch {
+                                pageState.animateScrollToPage(index)
+                            }
+                        }
                     },
                     text = {
                         Text(
@@ -132,8 +157,9 @@ fun Main(paddingValues: PaddingValues) {
                     },
                     icon = {
                         Image(
-                            bitmap = model.icon.toBitmap().asImageBitmap(),
-                            contentDescription = null
+                            bitmap = context.drawableResIdToBitmap(model.iconDrawableRes),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(ThemeManager.colorTheme.defaultFilterColor)
                         )
                     }
                 )

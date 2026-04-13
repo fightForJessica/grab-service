@@ -26,7 +26,10 @@ class MainActivity : ComponentActivity() {
             }
 
             Scaffold(Modifier.Companion.fillMaxSize()) { innerPadding ->
-                Main(innerPadding)
+                Main(
+                    context = this@MainActivity,
+                    paddingValues = innerPadding
+                )
             }
         }
     }

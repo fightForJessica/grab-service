@@ -1,8 +1,8 @@
 package com.jessi.grabservice.model
 
-import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 
 data class TabModel(
     val tabName: String,
-    val icon: Drawable
+    @DrawableRes val iconDrawableRes: Int
 )

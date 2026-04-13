@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 interface ColorTheme {
     val globalText: Color get() = Color(0xFF000000)
+    val defaultFilterColor: Color get() = Color(0xFF000000)
 }
 
 open class DefaultColorTheme: ColorTheme
@@ -12,4 +13,5 @@ val LightColorTheme = DefaultColorTheme()
 
 val DarkColorTheme = object : DefaultColorTheme() {
     override val globalText: Color get() = Color(0xFFFFFFFF)
+    override val defaultFilterColor: Color get() = Color(0xFFFFFFFF)
 }
