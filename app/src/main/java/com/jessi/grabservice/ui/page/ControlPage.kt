@@ -40,10 +40,15 @@ import com.jessi.grabservice.viewmodel.MainViewModel
 
 const val CONTROL_PAGE_NAME = "控制面板"
 
+interface IControlPageCallback {
+    fun onHibernateLockSelect(select: Boolean)
+}
+
 @Composable
 fun ControlPage(
     context: Context,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    callback: IControlPageCallback,
 ) {
 
     val listState = rememberLazyListState()
@@ -134,6 +139,7 @@ fun ControlPage(
                     onCheckedChange = {
                         Logger.i("休眠锁开关: $enableHibernateLock -> $it")
                         enableHibernateLock = it
+                        callback.onHibernateLockSelect(it)
                     }
                 )
             }

@@ -39,6 +39,7 @@ import com.jessi.grabservice.R
 import com.jessi.grabservice.model.TabModel
 import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
 import com.jessi.grabservice.ui.page.ControlPage
+import com.jessi.grabservice.ui.page.IControlPageCallback
 import com.jessi.grabservice.ui.page.REQUEST_PAGE_NAME
 import com.jessi.grabservice.ui.page.RESPONSE_PAGE_NAME
 import com.jessi.grabservice.ui.page.RequestPage
@@ -48,10 +49,13 @@ import com.jessi.grabservice.viewmodel.MainViewModel
 import com.jessi.grabservice.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
+interface IMainContentCallback: IControlPageCallback
+
 @Composable
 fun Main(
     context: Context,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    callback: IMainContentCallback
 ) {
     val viewModel = viewModel<MainViewModel>(factory = MainViewModelFactory())
     val scope = rememberCoroutineScope()
@@ -117,7 +121,7 @@ fun Main(
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    ControlPage(context, viewModel)
+                    ControlPage(context, viewModel, callback)
                 }
                 1 -> {
                     RequestPage(context)
