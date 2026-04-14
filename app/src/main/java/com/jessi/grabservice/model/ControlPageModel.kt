@@ -16,3 +16,7 @@ data class AppInfo(
     }
 
 }
+
+enum class AppInfoLoadStatus {
+    NONE, LOADING, FAILURE, SUCCESS
+}

@@ -2,14 +2,20 @@ package com.jessi.grabservice.ui.page
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,8 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jessi.grabservice.R
+import com.jessi.grabservice.model.AppInfoLoadStatus
 import com.jessi.grabservice.ui.DividerLine
 import com.jessi.grabservice.ui.DoubleSwitchLine
 import com.jessi.grabservice.ui.SingleSwitchLine
@@ -45,6 +54,7 @@ fun ControlPage(
     var enableShowSystemApp by remember { mutableStateOf(false) }
     var enableAllSelect by remember { mutableStateOf(false) }
 
+    val appInfoLoadStatus by viewModel.appInfoLoadStatus.collectAsState()
     val targetAppInfos = if (enableShowSystemApp) {
         viewModel.appInfoList.filter {
             it.isSystemApp
@@ -156,35 +166,70 @@ fun ControlPage(
             }
         }
 
-        // app 选择列表
-        items(
-            count = targetAppInfos.size,
-            key = { "control_app_list:${targetAppInfos[it].appName}" },
-            contentType = { "control_app_list" }
-        ) { index ->
-            val appInfo = targetAppInfos[index]
-            val modifier = when (index) {
-                0 -> {
-                    Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                }
-                targetAppInfos.size - 1 -> {
-                    Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                }
-                else -> {
-                    Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
+        when (appInfoLoadStatus) {
+            AppInfoLoadStatus.LOADING -> {
+                item {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 4.dp)
+                            .height(2.dp)
+                    )
                 }
             }
-
-            DoubleSwitchLine(
-                modifier = modifier,
-                firstText = appInfo.appName,
-                secondText = appInfo.packageName,
-                drawable = appInfo.getAppIconDrawable(context),
-                checked = false,
-                onCheckedChange = {
-
+            AppInfoLoadStatus.FAILURE -> {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(16.dp)
+                            .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            .clickable {
+                                viewModel.prepareAppInfos(context)
+                            }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.reload_app_infos),
+                            fontSize = 18.sp,
+                            color = ThemeManager.colorTheme.globalText,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-            )
+            }
+            AppInfoLoadStatus.SUCCESS -> {
+                // app 选择列表
+                items(
+                    count = targetAppInfos.size,
+                    key = { "control_app_list:${targetAppInfos[it].appName}" },
+                    contentType = { "control_app_list" }
+                ) { index ->
+                    val appInfo = targetAppInfos[index]
+                    val modifier = when (index) {
+                        0 -> {
+                            Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                        }
+                        targetAppInfos.size - 1 -> {
+                            Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                        }
+                        else -> {
+                            Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
+                        }
+                    }
+
+                    DoubleSwitchLine(
+                        modifier = modifier,
+                        firstText = appInfo.appName,
+                        secondText = appInfo.packageName,
+                        drawable = appInfo.getAppIconDrawable(context),
+                        checked = false,
+                        onCheckedChange = {
+
+                        }
+                    )
+                }
+            }
+            else -> {
+                // do nothing
+            }
         }
     }
 }
