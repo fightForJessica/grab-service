@@ -28,8 +28,7 @@ fun SingleSwitchLine(
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -44,7 +43,7 @@ fun SingleSwitchLine(
         Text(
             modifier = Modifier.weight(1f),
             text = text,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             color = ThemeManager.colorTheme.globalText,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

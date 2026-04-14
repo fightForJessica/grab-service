@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">抓取服务</string>
     <string name="main_switch">总开关</string>
+    <string name="auto_filter">自动过滤</string>
+    <string name="filter_content">过滤无法解析的数据包"</string>
+    <string name="show_system_app">显示系统应用</string>
+    <string name="all_select">全选</string>
+    <string name="hibernate_lock">休眠锁</string>
+    <string name="hibernate_lock_content">避免系统进入休眠</string>
 </resources>
