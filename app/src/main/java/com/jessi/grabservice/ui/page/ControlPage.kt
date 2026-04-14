@@ -56,9 +56,7 @@ fun ControlPage(
 
     val appInfoLoadStatus by viewModel.appInfoLoadStatus.collectAsState()
     val targetAppInfos = if (enableShowSystemApp) {
-        viewModel.appInfoList.filter {
-            it.isSystemApp
-        }
+        viewModel.appInfoList.filter { it.isSystemApp }
     } else {
         viewModel.appInfoList
     }
@@ -67,10 +65,23 @@ fun ControlPage(
         viewModel.prepareAppInfos(context)
     }
 
+    val checkEnableAllSelect: (() -> Boolean) = {
+        var isAllSelect = true
+        for (info in targetAppInfos) {
+            if (!info.isGrabSelected) {
+                isAllSelect = false
+                break
+            }
+        }
+        isAllSelect
+    }
+
+    LaunchedEffect(targetAppInfos) {
+        enableAllSelect = checkEnableAllSelect()
+    }
+
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         state = listState
     ) {
 
@@ -160,6 +171,12 @@ fun ControlPage(
                     checked = enableAllSelect,
                     onCheckedChange = {
                         Logger.i("全选: $enableAllSelect -> $it")
+                        // 只显示系统应用时，全选只对系统应用生效；不只显示系统应用时，全选对所有应用生效
+                        viewModel.appInfoList.forEachIndexed { index, info ->
+                            if (info.isSystemApp || !enableShowSystemApp) {
+                                viewModel.updateAppInfo(index, info.copy(isGrabSelected = it))
+                            }
+                        }
                         enableAllSelect = it
                     }
                 )
@@ -220,9 +237,11 @@ fun ControlPage(
                         firstText = appInfo.appName,
                         secondText = appInfo.packageName,
                         drawable = appInfo.getAppIconDrawable(context),
-                        checked = false,
+                        checked = appInfo.isGrabSelected,
                         onCheckedChange = {
-
+                            viewModel.updateAppInfo(index, appInfo.copy(isGrabSelected = it))
+                            // 单个 app 选择状态切换后更新全选状态
+                            enableAllSelect = checkEnableAllSelect()
                         }
                     )
                 }

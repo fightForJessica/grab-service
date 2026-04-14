@@ -72,4 +72,8 @@ class MainViewModel() : ViewModel() {
         }
     }
 
+    fun updateAppInfo(index: Int, info: AppInfo) {
+        appInfoList[index] = info
+    }
+
 }

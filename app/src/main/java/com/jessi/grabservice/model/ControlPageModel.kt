@@ -8,7 +8,8 @@ import androidx.compose.runtime.Stable
 data class AppInfo(
     val appName: String,
     val packageName: String,
-    val isSystemApp: Boolean = false
+    val isSystemApp: Boolean = false,
+    val isGrabSelected: Boolean = false
 ) {
 
     fun getAppIconDrawable(context: Context): Drawable {
