@@ -45,7 +45,13 @@ fun ControlPage(
     var enableShowSystemApp by remember { mutableStateOf(false) }
     var enableAllSelect by remember { mutableStateOf(false) }
 
-    val appInfos = viewModel.appInfoList
+    val targetAppInfos = if (enableShowSystemApp) {
+        viewModel.appInfoList.filter {
+            it.isSystemApp
+        }
+    } else {
+        viewModel.appInfoList
+    }
 
     LaunchedEffect(Unit) {
         viewModel.prepareAppInfos(context)
@@ -152,16 +158,16 @@ fun ControlPage(
 
         // app 选择列表
         items(
-            count = appInfos.size,
-            key = { "control_app_list:${appInfos[it].appName}" },
+            count = targetAppInfos.size,
+            key = { "control_app_list:${targetAppInfos[it].appName}" },
             contentType = { "control_app_list" }
         ) { index ->
-            val appInfo = appInfos[index]
+            val appInfo = targetAppInfos[index]
             val modifier = when (index) {
                 0 -> {
                     Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
-                appInfos.size - 1 -> {
+                targetAppInfos.size - 1 -> {
                     Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
                 else -> {
