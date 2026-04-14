@@ -117,7 +117,7 @@ fun Main(
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    ControlPage(context)
+                    ControlPage(context, viewModel)
                 }
                 1 -> {
                     RequestPage(context)

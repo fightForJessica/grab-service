@@ -18,3 +18,19 @@ fun Modifier.cardBackground(
         .clip(RoundedCornerShape(radius))
         .background(color)
 }
+
+fun Modifier.upperHalfConerBackground(
+    color: Color,
+    radius: Dp = 20.dp
+): Modifier {
+    return this.clip(RoundedCornerShape(topStart = radius, topEnd = radius))
+        .background(color)
+}
+
+fun Modifier.lowerHalfConerBackground(
+    color: Color,
+    radius: Dp = 20.dp
+): Modifier {
+    return this.clip(RoundedCornerShape(bottomStart = radius, bottomEnd = radius))
+        .background(color)
+}

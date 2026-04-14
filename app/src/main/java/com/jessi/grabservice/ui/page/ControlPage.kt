@@ -1,8 +1,7 @@
 package com.jessi.grabservice.ui.page
 
 import android.content.Context
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,14 +23,18 @@ import com.jessi.grabservice.ui.DividerLine
 import com.jessi.grabservice.ui.DoubleSwitchLine
 import com.jessi.grabservice.ui.SingleSwitchLine
 import com.jessi.grabservice.ui.cardBackground
+import com.jessi.grabservice.ui.lowerHalfConerBackground
 import com.jessi.grabservice.ui.theme.ThemeManager
+import com.jessi.grabservice.ui.upperHalfConerBackground
 import com.jessi.grabservice.utils.Logger
+import com.jessi.grabservice.viewmodel.MainViewModel
 
 const val CONTROL_PAGE_NAME = "控制面板"
 
 @Composable
 fun ControlPage(
-    context: Context
+    context: Context,
+    viewModel: MainViewModel
 ) {
 
     val listState = rememberLazyListState()
@@ -41,9 +45,17 @@ fun ControlPage(
     var enableShowSystemApp by remember { mutableStateOf(false) }
     var enableAllSelect by remember { mutableStateOf(false) }
 
+    val appInfos = viewModel.appInfoList
+
+    LaunchedEffect(Unit) {
+        viewModel.prepareAppInfos(context)
+    }
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        state = listState
     ) {
 
         // 设置内容相关 item
@@ -52,7 +64,8 @@ fun ControlPage(
             contentType = "control_setting"
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
             ) {
                 // 总开关
@@ -104,7 +117,9 @@ fun ControlPage(
             contentType = "control_app_select"
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
                     .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
             ) {
                 // 显示系统应用
@@ -136,24 +151,34 @@ fun ControlPage(
         }
 
         // app 选择列表
-        item(
-            key = "app_detail_list",
-            contentType = "app_detail_list"
-        ) {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = listState,
-                ) {
-//                    items(
-//
-//                    )
+        items(
+            count = appInfos.size,
+            key = { "control_app_list:${appInfos[it].appName}" },
+            contentType = { "control_app_list" }
+        ) { index ->
+            val appInfo = appInfos[index]
+            val modifier = when (index) {
+                0 -> {
+                    Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                }
+                appInfos.size - 1 -> {
+                    Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                }
+                else -> {
+                    Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
                 }
             }
-        }
 
+            DoubleSwitchLine(
+                modifier = modifier,
+                firstText = appInfo.appName,
+                secondText = appInfo.packageName,
+                drawable = appInfo.getAppIconDrawable(context),
+                checked = false,
+                onCheckedChange = {
+
+                }
+            )
+        }
     }
 }

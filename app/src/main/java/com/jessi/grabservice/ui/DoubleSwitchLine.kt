@@ -1,5 +1,6 @@
 package com.jessi.grabservice.ui
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -15,31 +16,49 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import com.jessi.grabservice.ui.theme.ThemeManager
 
 @Composable
 fun DoubleSwitchLine(
+    modifier: Modifier = Modifier,
     firstText: String,
     secondText: String,
-    @DrawableRes drawableRes: Int,
+    @DrawableRes drawableRes: Int? = null,
+    drawable: Drawable? = null,
     colorFilter: ColorFilter? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    if (drawableRes == null && drawable == null) {
+        throw IllegalArgumentException("drawableRes and drawable cannot be null at the same time.")
+    }
+
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            modifier = Modifier.size(20.dp),
-            painter = painterResource(drawableRes),
-            contentDescription = null,
-            colorFilter = colorFilter
-        )
+        if (drawableRes != null) {
+            Image(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(drawableRes),
+                contentDescription = null,
+                colorFilter = colorFilter
+            )
+        } else if (drawable != null) {
+            Image(
+                modifier = Modifier.size(20.dp),
+                bitmap = drawable.toBitmap().asImageBitmap(),
+                contentDescription = null,
+                colorFilter = colorFilter
+            )
+        }
+
 
         Spacer(Modifier.width(12.dp)) // marginStart
 
