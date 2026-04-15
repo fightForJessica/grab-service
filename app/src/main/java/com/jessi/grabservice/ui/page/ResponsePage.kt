@@ -20,7 +20,6 @@ import top.sankokomi.wirebare.kernel.interceptor.http.HttpHeaderParser
 const val RESPONSE_PAGE_NAME = "响应列表"
 
 interface IResponsePageCallback {
-    fun onResponseDeleteClick()
     fun onResponseItemClick(response: HttpRsp, appInfo: AppInfo)
 }
 
@@ -78,7 +77,7 @@ fun ResponsePage(
             )
         },
         onDeleteFabClick = {
-            callback.onResponseDeleteClick()
+            viewModel.clearResponse()
         }
     )
 

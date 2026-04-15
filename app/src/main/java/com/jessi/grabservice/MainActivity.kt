@@ -69,18 +69,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        override fun onRequestDeleteClick() {
-
-                        }
-
                         override fun onRequestItemClick(
                             request: HttpReq,
                             appInfo: AppInfo
                         ) {
-
-                        }
-
-                        override fun onResponseDeleteClick() {
 
                         }
 

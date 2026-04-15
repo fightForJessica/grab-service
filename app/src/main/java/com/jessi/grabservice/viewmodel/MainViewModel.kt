@@ -117,4 +117,12 @@ class MainViewModel() : ViewModel() {
         responseList.add(0, response)
     }
 
+    fun clearRequest() {
+        requestList.clear()
+    }
+
+    fun clearResponse() {
+        responseList.clear()
+    }
+
 }

@@ -35,6 +35,7 @@ fun <T> HttpInfosPage(
     itemContent: @Composable (index: Int, item: T) -> Unit,
     onDeleteFabClick: () -> Unit
 ) {
+
     val listState = rememberLazyListState()
 
     Box(
@@ -73,7 +74,7 @@ fun <T> HttpInfosPage(
         // Fab
         AnimatedVisibility(
             modifier = Modifier.padding(bottom = 24.dp, end = 24.dp).align(Alignment.BottomEnd),
-            visible = infoList.isNotEmpty(),
+            visible = infoList.isNotEmpty() && !listState.isScrollInProgress,
             enter = fadeIn(tween()),
             exit = fadeOut(tween())
         ) {
