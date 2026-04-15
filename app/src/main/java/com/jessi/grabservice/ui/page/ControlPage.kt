@@ -55,9 +55,9 @@ fun ControlPage(
 
     val listState = rememberLazyListState()
 
-    var enableMainSwitch by remember { mutableStateOf(false) }
-    var enableAutoFilter by remember { mutableStateOf(false) }
-    var enableHibernateLock by remember { mutableStateOf(false) }
+    val enableGrab by viewModel.enableGrab.collectAsState()
+    val enableAutoFilter by viewModel.enableAutoFilter.collectAsState()
+    val enableHibernateLock by viewModel.enableHibernateLock.collectAsState()
     val enableShowSystemApp by viewModel.filterSystemApp.collectAsState()
     var enableAllSelect by remember { mutableStateOf(false) }
 
@@ -107,10 +107,10 @@ fun ControlPage(
                     drawableRes = R.drawable.ic_main_switch,
                     text = stringResource(R.string.main_switch),
                     colorFilter = ColorFilter.tint(ThemeManager.colorTheme.defaultFilterColor),
-                    checked = enableMainSwitch,
+                    checked = enableGrab,
                     onCheckedChange = {
-                        Logger.i("总开关: $enableMainSwitch -> $it")
-                        enableMainSwitch = it
+                        Logger.i("总开关: $enableGrab -> $it")
+                        viewModel.enableGrab(it)
                         callback.onMainSwitchSelect(it)
                     }
                 )
@@ -126,7 +126,7 @@ fun ControlPage(
                     checked = enableAutoFilter,
                     onCheckedChange = {
                         Logger.i("自动过滤开关: $enableAutoFilter -> $it")
-                        enableAutoFilter = it
+                        viewModel.enableAutoFilter(it)
                     }
                 )
 
@@ -141,7 +141,7 @@ fun ControlPage(
                     checked = enableHibernateLock,
                     onCheckedChange = {
                         Logger.i("休眠锁开关: $enableHibernateLock -> $it")
-                        enableHibernateLock = it
+                        viewModel.enableHibernateLock(it)
                         callback.onHibernateLockSelect(it)
                     }
                 )

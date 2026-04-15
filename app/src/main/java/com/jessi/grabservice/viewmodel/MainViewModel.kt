@@ -27,15 +27,32 @@ class MainViewModelFactory() : ViewModelProvider.Factory {
 
 class MainViewModel() : ViewModel() {
 
-    private val _appInfoLoadStatus = MutableStateFlow(AppInfoLoadStatus.NONE)
-    val appInfoLoadStatus = _appInfoLoadStatus.asStateFlow()
+    // 总开关
+    private val _enableGrab = MutableStateFlow(false)
+    val enableGrab = _enableGrab.asStateFlow()
 
+    // 自动过滤
+    private val _enableAutoFilter = MutableStateFlow(true)
+    val enableAutoFilter = _enableAutoFilter.asStateFlow()
+
+    // 休眠锁
+    private val _enableHibernateLock = MutableStateFlow(false)
+    val enableHibernateLock = _enableHibernateLock.asStateFlow()
+
+    // 是否显示系统应用
     private val _filterSystemApp = MutableStateFlow(false)
     val filterSystemApp = _filterSystemApp.asStateFlow()
 
+    // app 列表加载状态
+    private val _appInfoLoadStatus = MutableStateFlow(AppInfoLoadStatus.NONE)
+    val appInfoLoadStatus = _appInfoLoadStatus.asStateFlow()
+
+    // app 信息列表
     val appInfoList = SnapshotStateList<AppInfo>()
 
+    // 请求列表
     val requestList = SnapshotStateList<HttpReq>()
+    // 相应列表
     val responseList = SnapshotStateList<HttpRsp>()
 
     fun prepareAppInfos(context: Context) {
@@ -64,6 +81,18 @@ class MainViewModel() : ViewModel() {
         }
     }
 
+    fun enableGrab(enable: Boolean) {
+        _enableGrab.value = enable
+    }
+
+    fun enableAutoFilter(enable: Boolean) {
+        _enableAutoFilter.value = enable
+    }
+
+    fun enableHibernateLock(enable: Boolean) {
+        _enableHibernateLock.value = enable
+    }
+
     fun updateAppInfo(index: Int, info: AppInfo) {
         appInfoList[index] = info
     }
@@ -73,11 +102,19 @@ class MainViewModel() : ViewModel() {
     }
 
     fun addRequest(session: HttpSession) {
-        requestList.add(0, session.toHttpReq())
+        val request = session.toHttpReq()
+        if (enableAutoFilter.value) {
+            if (request.url.isNullOrBlank()) return
+        }
+        requestList.add(0, request)
     }
 
     fun addResponse(session: HttpSession) {
-        responseList.add(0, session.toHttpRsp())
+        val response = session.toHttpRsp()
+        if (enableAutoFilter.value) {
+            if (response.url.isNullOrBlank()) return
+        }
+        responseList.add(0, response)
     }
 
 }
