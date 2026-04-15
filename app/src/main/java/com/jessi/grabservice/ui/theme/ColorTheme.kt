@@ -14,7 +14,7 @@ interface ColorTheme {
     val switchUnCheckedRailColor: Color get() = Color(0xFFE3E4E4)
     val dividerColor: Color get() = Color(0x33000000)
     val deleteFloatingButtonBackgroundColor: Color get() = Color(0xCCFF0000)
-    val tagBackgroundColor: Color get() = Color(0xFFE3E4E4)
+    val tagBackgroundColor: Color get() = Color(0xFFD4E157)
 }
 
 open class DefaultColorTheme: ColorTheme

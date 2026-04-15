@@ -16,8 +16,9 @@ import com.jessi.grabservice.ui.theme.ThemeManager
 fun Tag(text: String?) {
     if (text.isNullOrBlank()) return
     Box(
-        modifier = Modifier.background(ThemeManager.colorTheme.tagBackgroundColor)
+        modifier = Modifier.padding(end = 4.dp)
             .clip(RoundedCornerShape(6.dp))
+            .background(ThemeManager.colorTheme.tagBackgroundColor)
             .padding(horizontal = 6.dp, vertical = 3.dp)
     ) {
         Text(
