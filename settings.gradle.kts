@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "GrabService"
 include(":app")
+include(":wirebare-kernel")
+project(":wirebare-kernel").projectDir = file("wirebare-kernel/wirebare-kernel")
