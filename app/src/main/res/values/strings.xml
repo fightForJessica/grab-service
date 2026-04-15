@@ -8,4 +8,7 @@
     <string name="hibernate_lock">休眠锁</string>
     <string name="hibernate_lock_content">避免系统进入休眠</string>
     <string name="reload_app_infos">App 列表加载失败，点此重试~</string>
+    <string name="request_empty">还没有请求信息哦~</string>
+    <string name="response_empty">还没有响应信息哦~</string>
+    <string name="common_ssl">SSL/TLS</string>
 </resources>

@@ -34,30 +34,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.TabModel
 import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
 import com.jessi.grabservice.ui.page.ControlPage
 import com.jessi.grabservice.ui.page.IControlPageCallback
+import com.jessi.grabservice.ui.page.IRequestPageCallback
+import com.jessi.grabservice.ui.page.IResponsePageCallback
 import com.jessi.grabservice.ui.page.REQUEST_PAGE_NAME
 import com.jessi.grabservice.ui.page.RESPONSE_PAGE_NAME
 import com.jessi.grabservice.ui.page.RequestPage
 import com.jessi.grabservice.ui.page.ResponsePage
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.viewmodel.MainViewModel
-import com.jessi.grabservice.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
-interface IMainContentCallback: IControlPageCallback
+interface IMainContentCallback: IControlPageCallback,
+    IRequestPageCallback,
+    IResponsePageCallback
 
 @Composable
 fun Main(
     context: Context,
+    viewModel: MainViewModel,
     paddingValues: PaddingValues,
     callback: IMainContentCallback
 ) {
-    val viewModel = viewModel<MainViewModel>(factory = MainViewModelFactory())
     val scope = rememberCoroutineScope()
 
     // tab 信息
@@ -124,10 +126,10 @@ fun Main(
                     ControlPage(context, viewModel, callback)
                 }
                 1 -> {
-                    RequestPage(context)
+                    RequestPage(context, viewModel, callback)
                 }
                 2 -> {
-                    ResponsePage(context)
+                    ResponsePage(context, viewModel, callback)
                 }
             }
         }

@@ -10,10 +10,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
+import androidx.lifecycle.ViewModelProvider
+import com.jessi.grabservice.model.AppInfo
+import com.jessi.grabservice.model.HttpReq
+import com.jessi.grabservice.model.HttpRsp
+import com.jessi.grabservice.proxy.ProxyHelper
 import com.jessi.grabservice.ui.IMainContentCallback
 import com.jessi.grabservice.ui.Main
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.utils.Logger
+import com.jessi.grabservice.viewmodel.MainViewModel
+import com.jessi.grabservice.viewmodel.MainViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -26,9 +33,15 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private val viewModel by lazy {
+        ViewModelProvider.create(this, MainViewModelFactory())[MainViewModel::class.java]
+    }
+    private lateinit var proxyHelper: ProxyHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        proxyHelper = ProxyHelper(this, viewModel)
         setContent {
             val isSystemInDarkTheme = isSystemInDarkTheme()
             ThemeManager.updateTheme(isSystemInDarkTheme)
@@ -37,14 +50,45 @@ class MainActivity : ComponentActivity() {
             Scaffold(Modifier.Companion.fillMaxSize()) { innerPadding ->
                 Main(
                     context = this@MainActivity,
+                    viewModel = viewModel,
                     paddingValues = innerPadding,
                     callback = object : IMainContentCallback {
+                        override fun onMainSwitchSelect(select: Boolean) {
+                            if (select) {
+                                proxyHelper.tryStartGrabService()
+                            } else {
+                                proxyHelper.stopGrabService()
+                            }
+                        }
+
                         override fun onHibernateLockSelect(select: Boolean) {
                             if (select) {
                                 enableHibernateLock()
                             } else {
                                 releaseHibernateLock()
                             }
+                        }
+
+                        override fun onRequestDeleteClick() {
+
+                        }
+
+                        override fun onRequestItemClick(
+                            request: HttpReq,
+                            appInfo: AppInfo
+                        ) {
+
+                        }
+
+                        override fun onResponseDeleteClick() {
+
+                        }
+
+                        override fun onResponseItemClick(
+                            response: HttpRsp,
+                            appInfo: AppInfo
+                        ) {
+
                         }
                     }
                 )

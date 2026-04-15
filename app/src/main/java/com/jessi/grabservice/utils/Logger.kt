@@ -14,7 +14,13 @@ object Logger {
         }
     }
 
-    fun e(msg: String, tag: String = DEFAULT_TAG, throwable: Throwable?) {
+    fun w(msg: String, tag: String = DEFAULT_TAG) {
+        if (ENABLE) {
+            Log.w(tag, msg)
+        }
+    }
+
+    fun e(msg: String, tag: String = DEFAULT_TAG, throwable: Throwable? = null) {
         if (ENABLE) {
             Log.e(tag, msg, throwable)
         }

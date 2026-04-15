@@ -36,11 +36,13 @@ import com.jessi.grabservice.ui.lowerHalfConerBackground
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.ui.upperHalfConerBackground
 import com.jessi.grabservice.utils.Logger
+import com.jessi.grabservice.utils.getAppIconDrawable
 import com.jessi.grabservice.viewmodel.MainViewModel
 
 const val CONTROL_PAGE_NAME = "控制面板"
 
 interface IControlPageCallback {
+    fun onMainSwitchSelect(select: Boolean)
     fun onHibernateLockSelect(select: Boolean)
 }
 
@@ -56,7 +58,7 @@ fun ControlPage(
     var enableMainSwitch by remember { mutableStateOf(false) }
     var enableAutoFilter by remember { mutableStateOf(false) }
     var enableHibernateLock by remember { mutableStateOf(false) }
-    var enableShowSystemApp by remember { mutableStateOf(false) }
+    val enableShowSystemApp by viewModel.filterSystemApp.collectAsState()
     var enableAllSelect by remember { mutableStateOf(false) }
 
     val appInfoLoadStatus by viewModel.appInfoLoadStatus.collectAsState()
@@ -109,6 +111,7 @@ fun ControlPage(
                     onCheckedChange = {
                         Logger.i("总开关: $enableMainSwitch -> $it")
                         enableMainSwitch = it
+                        callback.onMainSwitchSelect(it)
                     }
                 )
 
@@ -163,7 +166,7 @@ fun ControlPage(
                     checked = enableShowSystemApp,
                     onCheckedChange = {
                         Logger.i("显示系统应用: $enableShowSystemApp -> $it")
-                        enableShowSystemApp = it
+                        viewModel.enableFilterSystemApp(it)
                     }
                 )
 
@@ -242,7 +245,7 @@ fun ControlPage(
                         modifier = modifier,
                         firstText = appInfo.appName,
                         secondText = appInfo.packageName,
-                        drawable = appInfo.getAppIconDrawable(context),
+                        drawable = context.getAppIconDrawable(appInfo.packageName),
                         checked = appInfo.isGrabSelected,
                         onCheckedChange = {
                             viewModel.updateAppInfo(index, appInfo.copy(isGrabSelected = it))

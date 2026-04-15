@@ -6,5 +6,5 @@ import androidx.compose.runtime.Stable
 @Stable
 data class TabModel(
     val tabName: String,
-    @DrawableRes val iconDrawableRes: Int
+    @param:DrawableRes val iconDrawableRes: Int
 )

@@ -1,13 +1,57 @@
 package com.jessi.grabservice.utils
 
 import android.content.Context
-import androidx.annotation.DrawableRes
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.graphics.drawable.toBitmap
+import android.graphics.drawable.Drawable
+import com.jessi.grabservice.model.HttpReq
+import com.jessi.grabservice.model.HttpRsp
+import top.sankokomi.wirebare.kernel.interceptor.http.HttpRequest
+import top.sankokomi.wirebare.kernel.interceptor.http.HttpResponse
+import top.sankokomi.wirebare.kernel.interceptor.http.HttpSession
 
-fun Context.drawableResIdToBitmap(@DrawableRes resId: Int): ImageBitmap {
-    return getDrawable(resId)?.toBitmap()?.asImageBitmap() ?: throw IllegalArgumentException(
-        "target resource id $resId cannot find target Drawable"
+fun Context.getAppIconDrawable(packageName: String): Drawable {
+    return packageManager.getApplicationIcon(packageName)
+}
+
+val HttpRequest.id: String get() = "req|${requestTime}|${sequence}"
+
+val HttpResponse.id: String get() = "rsp|${requestTime}|${sequence}"
+
+fun HttpSession.toHttpReq(): HttpReq {
+    return HttpReq(
+        id = request.id,
+        requestTime = request.requestTime,
+        sourceProcessUid = tcpSession.sourceProcessUid,
+        sourcePort = request.sourcePort,
+        sourcePkgName = request.sourcePkgName,
+        destinationAddress = request.destinationAddress,
+        destinationPort = request.destinationPort,
+        method = request.method,
+        isHttps = request.isHttps,
+        httpVersion = request.httpVersion,
+        host = request.host,
+        path = request.path,
+        originHead = request.originHead,
+        formatHead = request.formatHead,
+        url = request.url,
+    )
+}
+
+fun HttpSession.toHttpRsp(): HttpRsp {
+    return HttpRsp(
+        id = response.id,
+        requestTime = response.requestTime,
+        sourceProcessUid = tcpSession.sourceProcessUid,
+        sourcePort = response.sourcePort,
+        destinationAddress = response.destinationAddress,
+        destinationPort = response.destinationPort,
+        url = response.url,
+        isHttps = response.isHttps,
+        httpVersion = response.httpVersion,
+        rspStatus = response.rspStatus,
+        originHead = response.originHead,
+        formatHead = response.formatHead,
+        host = response.host,
+        contentType = response.contentType,
+        contentEncoding = response.contentEncoding,
     )
 }
