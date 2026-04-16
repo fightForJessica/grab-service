@@ -24,6 +24,7 @@ import com.jessi.grabservice.ui.theme.ThemeManager
 
 @Composable
 fun SingleSwitchLine(
+    enable: Boolean = true,
     text: String,
     @DrawableRes drawableRes: Int? = null,
     drawable: Drawable? = null,
@@ -72,6 +73,7 @@ fun SingleSwitchLine(
         Spacer(Modifier.width(4.dp))
 
         CustomSwitch(
+            enable = enable,
             checked = checked,
             onCheckedChange = onCheckedChange
         )

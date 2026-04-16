@@ -27,6 +27,7 @@ import com.jessi.grabservice.ui.theme.ThemeManager
 @Composable
 fun DoubleSwitchLine(
     modifier: Modifier = Modifier,
+    enable: Boolean = true,
     firstText: String,
     secondText: String,
     @DrawableRes drawableRes: Int? = null,
@@ -87,6 +88,7 @@ fun DoubleSwitchLine(
         Spacer(Modifier.width(4.dp))
 
         CustomSwitch(
+            enable = enable,
             checked = checked,
             onCheckedChange = onCheckedChange
         )

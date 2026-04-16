@@ -24,6 +24,7 @@ import com.jessi.grabservice.ui.theme.ThemeManager
 
 @Composable
 fun CustomSwitch(
+    enable: Boolean,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     width: Dp = 42.dp,
@@ -70,6 +71,7 @@ fun CustomSwitch(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
+                enabled = enable,
                 onClick = {
                     onCheckedChange(!checked)
                 }

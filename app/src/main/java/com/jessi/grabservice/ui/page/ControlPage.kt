@@ -1,6 +1,10 @@
 package com.jessi.grabservice.ui.page
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -174,6 +178,7 @@ fun ControlPage(
 
                 // 全选
                 SingleSwitchLine(
+                    enable = !enableGrab,
                     drawableRes = R.drawable.ic_all_select,
                     text = stringResource(R.string.all_select),
                     colorFilter = ColorFilter.tint(ThemeManager.colorTheme.defaultFilterColor),
@@ -222,6 +227,26 @@ fun ControlPage(
                 }
             }
             AppInfoLoadStatus.SUCCESS -> {
+                item(
+                    key = "control_app_select_warning",
+                    contentType = "control_app_select_warning"
+                ) {
+                    AnimatedVisibility(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        visible = enableGrab,
+                        enter = fadeIn(tween()),
+                        exit = fadeOut(tween())
+                    ) {
+                        Text(
+                            text = stringResource(R.string.change_app_select_while_switch_off),
+                            color = ThemeManager.colorTheme.warningText,
+                            fontSize = 16.sp,
+                            maxLines = 2
+                        )
+                    }
+                }
+
                 // app 选择列表
                 items(
                     count = targetAppInfos.size,
@@ -243,6 +268,7 @@ fun ControlPage(
 
                     DoubleSwitchLine(
                         modifier = modifier,
+                        enable = !enableGrab, // 开始抓取后不能变更 app 选择状态
                         firstText = appInfo.appName,
                         secondText = appInfo.packageName,
                         drawable = context.getAppIconDrawable(appInfo.packageName),
