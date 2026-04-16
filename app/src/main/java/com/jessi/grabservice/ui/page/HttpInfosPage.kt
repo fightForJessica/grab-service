@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,7 +61,10 @@ fun <T> HttpInfosPage(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                     state = listState,
-                    contentPadding = PaddingValues(top = 56.dp, bottom = 70.dp) // 标题栏高度 / 导航栏高度
+                    contentPadding = PaddingValues(
+                        top = dimensionResource(R.dimen.title_bar_height),
+                        bottom = dimensionResource(R.dimen.tab_layout_height)
+                    )
                 ) {
                     itemsIndexed(
                         items = infoList,
@@ -75,7 +79,10 @@ fun <T> HttpInfosPage(
 
         // Fab
         AnimatedVisibility(
-            modifier = Modifier.padding(bottom = 24.dp + 70.dp, end = 24.dp).align(Alignment.BottomEnd),
+            modifier = Modifier.padding(
+                bottom = dimensionResource(R.dimen.tab_layout_height) + 24.dp,
+                end = 24.dp
+            ).align(Alignment.BottomEnd),
             visible = infoList.isNotEmpty() && !listState.isScrollInProgress,
             enter = fadeIn(tween()) + slideInHorizontally(tween()) { it / 2 },
             exit = fadeOut(tween()) + slideOutHorizontally(tween()) { it / 2 }

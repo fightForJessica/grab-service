@@ -43,6 +43,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         proxyHelper = ProxyHelper(this, viewModel)
         setContent {
+
+            // 主题色适配
             val isSystemInDarkTheme = isSystemInDarkTheme()
             ThemeManager.updateTheme(isSystemInDarkTheme)
             Logger.i("MainActivity: theme isDark: $isSystemInDarkTheme")

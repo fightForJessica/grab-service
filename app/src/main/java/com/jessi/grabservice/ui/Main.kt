@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -145,7 +146,7 @@ fun Main(
         // tabLayout
         AnimatedVisibility(
             modifier = Modifier.fillMaxWidth()
-                .height(70.dp)
+                .height(dimensionResource(R.dimen.tab_layout_height))
                 .align(Alignment.BottomCenter),
             visible = !mainPageScrolling,
             enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),

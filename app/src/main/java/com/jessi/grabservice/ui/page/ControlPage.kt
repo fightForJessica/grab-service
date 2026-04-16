@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -100,7 +101,10 @@ fun ControlPage(
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         state = listState,
-        contentPadding = PaddingValues(top = 56.dp, bottom = 70.dp) // 标题栏高度 / 导航栏高度
+        contentPadding = PaddingValues(
+            top = dimensionResource(R.dimen.title_bar_height),
+            bottom = dimensionResource(R.dimen.tab_layout_height)
+        )
     ) {
 
         // 设置内容相关 item
