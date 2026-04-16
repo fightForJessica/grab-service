@@ -2,7 +2,9 @@ package com.jessi.grabservice.ui.page
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.jessi.grabservice.R
@@ -13,6 +15,7 @@ import com.jessi.grabservice.ui.Tag
 import com.jessi.grabservice.ui.lowerHalfConerBackground
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.ui.upperHalfConerBackground
+import com.jessi.grabservice.utils.Logger
 import com.jessi.grabservice.utils.getAppIconDrawable
 import com.jessi.grabservice.viewmodel.MainViewModel
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpHeaderParser
@@ -29,10 +32,18 @@ fun RequestPage(
     viewModel: MainViewModel,
     callback: IRequestPageCallback
 ) {
+    val listState = rememberLazyListState()
     val requestList = viewModel.requestList
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        Logger.i("RequestPage scrolling: ${listState.isScrollInProgress}")
+        viewModel.setMainPageScrolling(listState.isScrollInProgress)
+    }
+
     HttpInfosPage(
         infoList = requestList,
         emptyText = stringResource(R.string.request_empty),
+        listState = listState,
         itemKey = { index, request ->
             "info_page_request:${request.id}"
         },

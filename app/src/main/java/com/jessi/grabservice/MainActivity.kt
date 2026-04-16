@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             ThemeManager.updateTheme(isSystemInDarkTheme)
             Logger.i("MainActivity: theme isDark: $isSystemInDarkTheme")
 
-            Scaffold(Modifier.Companion.fillMaxSize()) { innerPadding ->
+            Scaffold(Modifier.fillMaxSize()) { innerPadding ->
                 Main(
                     context = this@MainActivity,
                     viewModel = viewModel,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -91,9 +92,15 @@ fun ControlPage(
         enableAllSelect = checkEnableAllSelect()
     }
 
+    LaunchedEffect(listState.isScrollInProgress) {
+        Logger.i("ControlPage scrolling: ${listState.isScrollInProgress}")
+        viewModel.setMainPageScrolling(listState.isScrollInProgress)
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-        state = listState
+        state = listState,
+        contentPadding = PaddingValues(top = 56.dp, bottom = 70.dp) // 标题栏高度 / 导航栏高度
     ) {
 
         // 设置内容相关 item

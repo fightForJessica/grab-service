@@ -5,16 +5,19 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,13 +34,11 @@ import com.jessi.grabservice.ui.theme.ThemeManager
 fun <T> HttpInfosPage(
     infoList: List<T>,
     emptyText: String,
+    listState: LazyListState,
     itemKey: (index: Int, item: T) -> Any,
     itemContent: @Composable (index: Int, item: T) -> Unit,
     onDeleteFabClick: () -> Unit
 ) {
-
-    val listState = rememberLazyListState()
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -58,7 +59,8 @@ fun <T> HttpInfosPage(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-                    state = listState
+                    state = listState,
+                    contentPadding = PaddingValues(top = 56.dp, bottom = 70.dp) // 标题栏高度 / 导航栏高度
                 ) {
                     itemsIndexed(
                         items = infoList,
@@ -73,10 +75,10 @@ fun <T> HttpInfosPage(
 
         // Fab
         AnimatedVisibility(
-            modifier = Modifier.padding(bottom = 24.dp, end = 24.dp).align(Alignment.BottomEnd),
+            modifier = Modifier.padding(bottom = 24.dp + 70.dp, end = 24.dp).align(Alignment.BottomEnd),
             visible = infoList.isNotEmpty() && !listState.isScrollInProgress,
-            enter = fadeIn(tween()),
-            exit = fadeOut(tween())
+            enter = fadeIn(tween()) + slideInHorizontally(tween()) { it / 2 },
+            exit = fadeOut(tween()) + slideOutHorizontally(tween()) { it / 2 }
         ) {
             Box(
                 modifier = Modifier.cardBackground(

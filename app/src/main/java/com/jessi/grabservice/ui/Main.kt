@@ -8,10 +8,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -21,12 +22,14 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -34,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.TabModel
 import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
@@ -76,7 +80,7 @@ fun Main(
     }
 
     // 列表滚动时，隐藏标题和 tab
-    var hideStatusContent by remember { mutableStateOf(false) }
+    val mainPageScrolling by viewModel.mainPageScrolling.collectAsState()
 
     val pageState = rememberPagerState(
         initialPage = selectIndex,
@@ -88,7 +92,7 @@ fun Main(
         }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(ThemeManager.colorTheme.backgroundColor)
@@ -98,14 +102,18 @@ fun Main(
         // title
         AnimatedVisibility(
             modifier = Modifier
-                .padding(vertical = 16.dp)
                 .fillMaxWidth()
-                .background(ThemeManager.colorTheme.backgroundColor),
-            visible = !hideStatusContent,
+                .align(Alignment.TopCenter)
+                .zIndex(1f),
+            visible = !mainPageScrolling,
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
             Text(
+                modifier = Modifier.background(ThemeManager.colorTheme.backgroundColor)
+                    .padding(vertical = 16.dp)
+                    .height(24.dp)
+                    .align(Alignment.Center),
                 text = titleText,
                 color = ThemeManager.colorTheme.globalText,
                 fontSize = 20.sp,
@@ -116,7 +124,7 @@ fun Main(
         
         // pagerContainer
         HorizontalPager(
-            modifier = Modifier.fillMaxSize().weight(1f),
+            modifier = Modifier.fillMaxSize(),
             state = pageState,
             beyondViewportPageCount = 2,
             userScrollEnabled = true
@@ -136,10 +144,12 @@ fun Main(
 
         // tabLayout
         AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(),
-            visible = !hideStatusContent,
-            enter = fadeIn() + slideInVertically(),
-            exit = fadeOut() + slideOutVertically()
+            modifier = Modifier.fillMaxWidth()
+                .height(70.dp)
+                .align(Alignment.BottomCenter),
+            visible = !mainPageScrolling,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
         ) {
             TabRow(
                 modifier = Modifier.fillMaxWidth(),

@@ -55,6 +55,9 @@ class MainViewModel() : ViewModel() {
     // 相应列表
     val responseList = SnapshotStateList<HttpRsp>()
 
+    private val _mainPageScrolling = MutableStateFlow(false)
+    val mainPageScrolling = _mainPageScrolling.asStateFlow()
+
     fun prepareAppInfos(context: Context) {
         viewModelScope.launch {
             _appInfoLoadStatus.emit(AppInfoLoadStatus.LOADING)
@@ -123,6 +126,11 @@ class MainViewModel() : ViewModel() {
 
     fun clearResponse() {
         responseList.clear()
+    }
+
+    fun setMainPageScrolling(scrolling: Boolean) {
+        if (scrolling == _mainPageScrolling.value) return
+        _mainPageScrolling.value = scrolling
     }
 
 }
