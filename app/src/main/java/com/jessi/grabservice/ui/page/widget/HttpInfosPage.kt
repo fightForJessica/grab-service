@@ -1,4 +1,4 @@
-package com.jessi.grabservice.ui.page
+package com.jessi.grabservice.ui.page.widget
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility

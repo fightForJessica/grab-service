@@ -55,3 +55,7 @@ fun HttpSession.toHttpRsp(): HttpRsp {
         contentEncoding = response.contentEncoding,
     )
 }
+
+fun String?.orNone(): String {
+    return this ?: "none"
+}

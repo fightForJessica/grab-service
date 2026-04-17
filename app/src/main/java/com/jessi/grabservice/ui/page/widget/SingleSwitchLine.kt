@@ -1,13 +1,11 @@
-package com.jessi.grabservice.ui
+package com.jessi.grabservice.ui.page.widget
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,15 +23,14 @@ import androidx.core.graphics.drawable.toBitmap
 import com.jessi.grabservice.ui.theme.ThemeManager
 
 @Composable
-fun DoubleSwitchLine(
-    modifier: Modifier = Modifier,
+fun SingleSwitchLine(
     enable: Boolean = true,
-    firstText: String,
-    secondText: String,
+    text: String,
     @DrawableRes drawableRes: Int? = null,
     drawable: Drawable? = null,
     colorFilter: ColorFilter? = null,
     checked: Boolean,
+    formatModifier: (Modifier.() -> Modifier)? = null,
     onCheckedChange: (Boolean) -> Unit
 ) {
     if (drawableRes == null && drawable == null) {
@@ -41,7 +38,9 @@ fun DoubleSwitchLine(
     }
 
     Row(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp).run {
+            formatModifier?.invoke(this) ?: this
+        },
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (drawableRes != null) {
@@ -60,30 +59,16 @@ fun DoubleSwitchLine(
             )
         }
 
-
         Spacer(Modifier.width(12.dp)) // marginStart
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = firstText,
-                fontSize = 16.sp,
-                color = ThemeManager.colorTheme.globalText,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(Modifier.height(2.dp))
-
-            Text(
-                text = secondText,
-                fontSize = 14.sp,
-                color = ThemeManager.colorTheme.secondText,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        Text(
+            modifier = Modifier.weight(1f),
+            text = text,
+            fontSize = 16.sp,
+            color = ThemeManager.colorTheme.globalText,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
 
         Spacer(Modifier.width(4.dp))
 

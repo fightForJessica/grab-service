@@ -1,4 +1,4 @@
-package com.jessi.grabservice.ui
+package com.jessi.grabservice.ui.page.widget
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState

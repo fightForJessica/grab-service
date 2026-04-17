@@ -10,9 +10,11 @@ import androidx.compose.ui.res.stringResource
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.AppInfo
 import com.jessi.grabservice.model.HttpRsp
-import com.jessi.grabservice.ui.HttpInfoItemLayout
-import com.jessi.grabservice.ui.Tag
+import com.jessi.grabservice.ui.cardBackground
+import com.jessi.grabservice.ui.page.widget.HttpInfoItemLayout
+import com.jessi.grabservice.ui.page.widget.Tag
 import com.jessi.grabservice.ui.lowerHalfConerBackground
+import com.jessi.grabservice.ui.page.widget.HttpInfosPage
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.ui.upperHalfConerBackground
 import com.jessi.grabservice.utils.Logger
@@ -52,13 +54,19 @@ fun ResponsePage(
                 it.uid == response.sourceProcessUid
             }
             require(targetAppInfo != null)
-            val modifier = when (index) {
-                0 -> {
+            val modifier = when {
+                responseList.size == 1 -> {
+                    Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                }
+
+                index == 0 -> {
                     Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
-                responseList.size - 1 -> {
+
+                index == responseList.size - 1 -> {
                     Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
+
                 else -> {
                     Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
                 }

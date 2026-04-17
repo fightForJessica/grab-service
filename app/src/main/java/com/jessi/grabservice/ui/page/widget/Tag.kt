@@ -1,4 +1,4 @@
-package com.jessi.grabservice.ui
+package com.jessi.grabservice.ui.page.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

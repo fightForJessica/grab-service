@@ -1,5 +1,6 @@
 package com.jessi.grabservice
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PowerManager
 import androidx.activity.ComponentActivity
@@ -75,14 +76,14 @@ class MainActivity : ComponentActivity() {
                             request: HttpReq,
                             appInfo: AppInfo
                         ) {
-
+                            openContentDetailPage(appInfo, request, null, 0)
                         }
 
                         override fun onResponseItemClick(
                             response: HttpRsp,
                             appInfo: AppInfo
                         ) {
-
+                            openContentDetailPage(appInfo, null, response, 1)
                         }
                     }
                 )
@@ -105,6 +106,25 @@ class MainActivity : ComponentActivity() {
         if (!isHibernateLock) return
         isHibernateLock = false
         hibernateLock?.release()
+    }
+
+    private fun openContentDetailPage(
+        appInfo: AppInfo,
+        request: HttpReq?,
+        response: HttpRsp?,
+        initPageIndex: Int
+    ) {
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra(DetailActivity.KEY_APP_INFO, appInfo)
+            if (request != null) {
+                putExtra(DetailActivity.KEY_REQUEST, request)
+            }
+            if (response != null) {
+                putExtra(DetailActivity.KEY_RESPONSE, response)
+            }
+            putExtra(DetailActivity.KEY_INIT_PAGE_INDEX, initPageIndex)
+        }
+        startActivity(intent)
     }
 
 }

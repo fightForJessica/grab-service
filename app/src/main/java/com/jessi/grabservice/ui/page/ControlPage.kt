@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.sp
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.AppInfoLoadStatus
 import com.jessi.grabservice.ui.DividerLine
-import com.jessi.grabservice.ui.DoubleSwitchLine
-import com.jessi.grabservice.ui.SingleSwitchLine
+import com.jessi.grabservice.ui.page.widget.DoubleSwitchLine
+import com.jessi.grabservice.ui.page.widget.SingleSwitchLine
 import com.jessi.grabservice.ui.cardBackground
 import com.jessi.grabservice.ui.lowerHalfConerBackground
 import com.jessi.grabservice.ui.theme.ThemeManager

@@ -1,8 +1,11 @@
 package com.jessi.grabservice.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Stable
+import kotlinx.parcelize.Parcelize
 
 @Stable
+@Parcelize
 data class HttpReq(
     val id: String,
     val requestTime: Long?,
@@ -19,4 +22,4 @@ data class HttpReq(
     val originHead: String?,
     val formatHead: List<String>?,
     val url: String?,
-)
+) : Parcelable

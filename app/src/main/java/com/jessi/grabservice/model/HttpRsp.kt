@@ -1,10 +1,13 @@
 package com.jessi.grabservice.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Stable
 import com.jessi.grabservice.utils.id
+import kotlinx.parcelize.Parcelize
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpSession
 
 @Stable
+@Parcelize
 data class HttpRsp(
     val id: String,
     val requestTime: Long?,
@@ -21,4 +24,4 @@ data class HttpRsp(
     val host: String?,
     val contentType: String?,
     val contentEncoding: String?,
-)
+) : Parcelable

@@ -1,4 +1,4 @@
-package com.jessi.grabservice.ui
+package com.jessi.grabservice.ui.detail
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
@@ -18,7 +18,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,48 +32,40 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.jessi.grabservice.R
+import com.jessi.grabservice.model.AppInfo
+import com.jessi.grabservice.model.HttpReq
+import com.jessi.grabservice.model.HttpRsp
 import com.jessi.grabservice.model.TabModel
-import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
-import com.jessi.grabservice.ui.page.ControlPage
-import com.jessi.grabservice.ui.page.IControlPageCallback
-import com.jessi.grabservice.ui.page.IRequestPageCallback
-import com.jessi.grabservice.ui.page.IResponsePageCallback
-import com.jessi.grabservice.ui.page.REQUEST_PAGE_NAME
-import com.jessi.grabservice.ui.page.RESPONSE_PAGE_NAME
-import com.jessi.grabservice.ui.page.RequestPage
-import com.jessi.grabservice.ui.page.ResponsePage
+import com.jessi.grabservice.ui.BottomTabLayout
 import com.jessi.grabservice.ui.theme.ThemeManager
-import com.jessi.grabservice.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
-interface IMainContentCallback: IControlPageCallback,
-    IRequestPageCallback,
-    IResponsePageCallback
-
 @Composable
-fun Main(
+fun Detail(
     context: Context,
-    viewModel: MainViewModel,
     paddingValues: PaddingValues,
-    callback: IMainContentCallback
+    appInfo: AppInfo,
+    request: HttpReq?,
+    response: HttpRsp?,
+    initPageIndex: Int
 ) {
+    // todo 加入 request 和 response 的联动
+    var request by remember { mutableStateOf(request) }
+    var response by remember { mutableStateOf(response) }
+
     val scope = rememberCoroutineScope()
 
-    // tab 信息
     val tabList = listOf(
-        TabModel(CONTROL_PAGE_NAME, R.drawable.ic_control_page),
-        TabModel(REQUEST_PAGE_NAME, R.drawable.ic_request_page),
-        TabModel(RESPONSE_PAGE_NAME, R.drawable.ic_response_page)
+        TabModel(REQUEST_DETAIL_PAGE_NAME, R.drawable.ic_request_detail_page),
+        TabModel(RESPONSE_DETAIL_PAGE_NAME, R.drawable.ic_response_detail_page)
     )
-    var selectIndex by remember { mutableIntStateOf(0) }
+    var selectIndex by remember { mutableIntStateOf(initPageIndex) }
 
-    // 标题文本
     val titleText by remember(selectIndex) {
         mutableStateOf(tabList[selectIndex].tabName)
     }
 
-    // 列表滚动时，隐藏标题和 tab
-    val mainPageScrolling by viewModel.mainPageScrolling.collectAsState()
+    var detailPageScrolling by remember { mutableStateOf(false) }
 
     val pageState = rememberPagerState(
         initialPage = selectIndex,
@@ -87,8 +78,7 @@ fun Main(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .background(ThemeManager.colorTheme.backgroundColor)
             .padding(paddingValues)
     ) {
@@ -99,7 +89,7 @@ fun Main(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
                 .zIndex(1f),
-            visible = !mainPageScrolling,
+            visible = !detailPageScrolling,
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
@@ -115,32 +105,42 @@ fun Main(
                 textAlign = TextAlign.Center
             )
         }
-        
+
         // pagerContainer
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
             state = pageState,
-            beyondViewportPageCount = 2,
+            beyondViewportPageCount = 1,
             userScrollEnabled = true
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    ControlPage(context, viewModel, callback)
+                    RequestDetailPage(
+                        context = context,
+                        appInfo = appInfo,
+                        request = request,
+                        onScrollStateUpdate = {
+                            detailPageScrolling = it
+                        }
+                    )
                 }
                 1 -> {
-                    RequestPage(context, viewModel, callback)
-                }
-                2 -> {
-                    ResponsePage(context, viewModel, callback)
+                    ResponseDetailPage(
+                        context = context,
+                        appInfo = appInfo,
+                        response = response,
+                        onScrollStateUpdate = {
+                            detailPageScrolling = it
+                        }
+                    )
                 }
             }
         }
 
-        // tabLayout
         BottomTabLayout(
             modifier = Modifier.align(Alignment.BottomCenter),
             tabList = tabList,
-            visible = !mainPageScrolling,
+            visible = !detailPageScrolling,
             selectIndex = selectIndex,
             onItemClick = {
                 scope.launch {
@@ -149,5 +149,4 @@ fun Main(
             }
         )
     }
-
 }

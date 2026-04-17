@@ -3,6 +3,7 @@
     <string name="main_switch">总开关</string>
     <string name="auto_filter">自动过滤</string>
     <string name="filter_content">过滤无法解析的数据包"</string>
+    <string name="system_app">系统应用</string>
     <string name="show_system_app">显示系统应用</string>
     <string name="all_select">全选</string>
     <string name="hibernate_lock">休眠锁</string>
@@ -12,4 +13,18 @@
     <string name="response_empty">还没有响应信息哦~</string>
     <string name="common_ssl">SSL/TLS</string>
     <string name="change_app_select_while_switch_off">抓取服务开启时无法变更抓取应用</string>
+    <string name="request_url">请求链接</string>
+    <string name="request_time">请求时间</string>
+    <string name="uid">UID</string>
+    <string name="app_package_name">应用程序名称</string>
+    <string name="ip_address">IP 地址</string>
+    <string name="ip_version">IP 版本</string>
+    <string name="ip_source">来源 IP</string>
+    <string name="ip_destination">目标 IP</string>
+    <string name="request_detail_content">请求详细信息</string>
+    <string name="response_detail_content">响应详细信息</string>
+    <string name="request_method">请求方法</string>
+    <string name="response_code">响应状态码</string>
+    <string name="http_version">HTTP 版本</string>
+    <string name="message_size">报文大小</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.jessi.grabservice.ui
+package com.jessi.grabservice.ui.page.widget
 
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
