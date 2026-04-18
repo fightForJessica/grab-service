@@ -67,7 +67,7 @@ class MainViewModel() : ViewModel() {
             val appInfos = context.packageManager.getInstalledApplications(
                 PackageManager.MATCH_UNINSTALLED_PACKAGES
             ).filter {
-                it != null
+                it != null && it.packageName != context.packageName
             }.map {
                 AppInfo(
                     appName = context.packageManager.getApplicationLabel(it).toString(),

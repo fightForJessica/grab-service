@@ -96,11 +96,13 @@ fun ControlPage(
 
 
     val checkEnableAllSelect: (() -> Boolean) = {
-        var isAllSelect = true
-        for (info in targetAppInfos) {
-            if (!info.isGrabSelected) {
-                isAllSelect = false
-                break
+        var isAllSelect = targetAppInfos.isNotEmpty()
+        if (isAllSelect) {
+            for (info in targetAppInfos) {
+                if (!info.isGrabSelected) {
+                    isAllSelect = false
+                    break
+                }
             }
         }
         isAllSelect
@@ -265,8 +267,8 @@ fun ControlPage(
                 item {
                     Box(
                         modifier = Modifier.fillMaxWidth()
-                            .padding(16.dp)
                             .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            .padding(16.dp)
                             .clickable {
                                 viewModel.prepareAppInfos(context)
                             }
@@ -301,42 +303,58 @@ fun ControlPage(
                     }
                 }
 
-                // app 选择列表
-                items(
-                    count = targetAppInfos.size,
-                    key = { "control_app_list:${targetAppInfos[it].appName}" },
-                    contentType = { "control_app_list" }
-                ) { index ->
-                    val appInfo = targetAppInfos[index]
-                    val modifier = when (index) {
-                        0 -> {
-                            if (targetAppInfos.size == 1) {
-                                Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                            } else {
-                                Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                            }
-                        }
-                        targetAppInfos.size - 1 -> {
-                            Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                        }
-                        else -> {
-                            Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
+                if (targetAppInfos.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                                .cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.without_load_app_infos_permission),
+                                fontSize = 16.sp,
+                                color = ThemeManager.colorTheme.globalText
+                            )
                         }
                     }
-
-                    DoubleSwitchLine(
-                        modifier = modifier,
-                        enable = !enableGrab, // 开始抓取后不能变更 app 选择状态
-                        firstText = appInfo.appName,
-                        secondText = appInfo.packageName,
-                        drawable = context.getAppIconDrawable(appInfo.packageName),
-                        checked = appInfo.isGrabSelected,
-                        onCheckedChange = {
-                            viewModel.updateAppInfo(index, appInfo.copy(isGrabSelected = it))
-                            // 单个 app 选择状态切换后更新全选状态
-                            enableAllSelect = checkEnableAllSelect()
+                } else {
+                    // app 选择列表
+                    items(
+                        count = targetAppInfos.size,
+                        key = { "control_app_list:${targetAppInfos[it].appName}" },
+                        contentType = { "control_app_list" }
+                    ) { index ->
+                        val appInfo = targetAppInfos[index]
+                        val modifier = when (index) {
+                            0 -> {
+                                if (targetAppInfos.size == 1) {
+                                    Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                                } else {
+                                    Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                                }
+                            }
+                            targetAppInfos.size - 1 -> {
+                                Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            }
+                            else -> {
+                                Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
+                            }
                         }
-                    )
+
+                        DoubleSwitchLine(
+                            modifier = modifier,
+                            enable = !enableGrab, // 开始抓取后不能变更 app 选择状态
+                            firstText = appInfo.appName,
+                            secondText = appInfo.packageName,
+                            drawable = context.getAppIconDrawable(appInfo.packageName),
+                            checked = appInfo.isGrabSelected,
+                            onCheckedChange = {
+                                viewModel.updateAppInfo(index, appInfo.copy(isGrabSelected = it))
+                                // 单个 app 选择状态切换后更新全选状态
+                                enableAllSelect = checkEnableAllSelect()
+                            }
+                        )
+                    }
                 }
             }
             else -> {
