@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 Main(
                     context = this@MainActivity,
                     viewModel = viewModel,
+                    proxyHelper = proxyHelper,
                     paddingValues = innerPadding,
                     callback = object : IMainContentCallback {
                         override fun onMainSwitchSelect(select: Boolean) {

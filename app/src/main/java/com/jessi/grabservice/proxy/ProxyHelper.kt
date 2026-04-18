@@ -19,8 +19,7 @@ class ProxyHelper(
 ) {
 
     private companion object {
-        const val MTU = 1400
-        const val BANDWIDTH_LIMIT_TIMEOUT = 10000L
+        const val MTU = 4096
     }
 
     private val vpnLaunchResultLauncher = activity.registerForActivityResult(
@@ -94,9 +93,9 @@ class ProxyHelper(
     ) {
         WireBare.logLevel = WireBareLogger.Level.VERBOSE
         WireBare.startProxy {
-//            if (ProxyPolicyDataStore.enableSSL.value) {
-//                jks = wireBareJKS
-//            }
+            if (viewModel.enableSSL.value) {
+                jks = wireBareJKS
+            }
             mtu = MTU
             tcpProxyServerCount = 5
             ipv4ProxyAddress = "10.1.10.1" to 32
@@ -109,19 +108,6 @@ class ProxyHelper(
                     GrabHttpInterceptor.Factory(onRequest, onResponse)
                 )
             )
-
-            WireBare.dynamicConfig.bandwidthStatInterval = 2000L
-//            val maxBandwidthLimit = 2L * MTU
-//            val reqBandwidthLimit = KnetPolicyDataStore.reqBandwidthLimit.value
-//            val rspBandwidthLimit = KnetPolicyDataStore.rspBandwidthLimit.value
-//            WireBare.dynamicConfig.reqBandwidthLimiter = BandwidthLimiter(
-//                if (reqBandwidthLimit in 1..<maxBandwidthLimit) reqBandwidthLimit else 0L,
-//                BANDWIDTH_LIMIT_TIMEOUT
-//            )
-//            WireBare.dynamicConfig.rspBandwidthLimiter = BandwidthLimiter(
-//                if (rspBandwidthLimit in 1..<maxBandwidthLimit) rspBandwidthLimit else 0L,
-//                BANDWIDTH_LIMIT_TIMEOUT
-//            )
         }
     }
 

@@ -33,6 +33,10 @@ class MainViewModel() : ViewModel() {
     private val _enableAutoFilter = MutableStateFlow(true)
     val enableAutoFilter = _enableAutoFilter.asStateFlow()
 
+    // 是否启用 SSL/TLS
+    private val _enableSSL = MutableStateFlow(false)
+    val enableSSL = _enableSSL.asStateFlow()
+
     // 休眠锁
     private val _enableHibernateLock = MutableStateFlow(false)
     val enableHibernateLock = _enableHibernateLock.asStateFlow()
@@ -87,6 +91,10 @@ class MainViewModel() : ViewModel() {
 
     fun enableAutoFilter(enable: Boolean) {
         _enableAutoFilter.value = enable
+    }
+
+    fun enableSSL(enable: Boolean) {
+        _enableSSL.value = enable
     }
 
     fun enableHibernateLock(enable: Boolean) {

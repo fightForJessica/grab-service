@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
@@ -30,6 +31,7 @@ fun DoubleSwitchLine(
     enable: Boolean = true,
     firstText: String,
     secondText: String,
+    secondTextColor: Color = ThemeManager.colorTheme.secondText,
     @DrawableRes drawableRes: Int? = null,
     drawable: Drawable? = null,
     colorFilter: ColorFilter? = null,
@@ -79,7 +81,7 @@ fun DoubleSwitchLine(
             Text(
                 text = secondText,
                 fontSize = 14.sp,
-                color = ThemeManager.colorTheme.secondText,
+                color = secondTextColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

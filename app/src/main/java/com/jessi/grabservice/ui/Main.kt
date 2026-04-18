@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.TabModel
+import com.jessi.grabservice.proxy.ProxyHelper
 import com.jessi.grabservice.ui.page.CONTROL_PAGE_NAME
 import com.jessi.grabservice.ui.page.ControlPage
 import com.jessi.grabservice.ui.page.IControlPageCallback
@@ -55,6 +56,7 @@ interface IMainContentCallback: IControlPageCallback,
 fun Main(
     context: Context,
     viewModel: MainViewModel,
+    proxyHelper: ProxyHelper,
     paddingValues: PaddingValues,
     callback: IMainContentCallback
 ) {
@@ -125,7 +127,7 @@ fun Main(
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    ControlPage(context, viewModel, callback)
+                    ControlPage(context, viewModel, proxyHelper, callback)
                 }
                 1 -> {
                     RequestPage(context, viewModel, callback)

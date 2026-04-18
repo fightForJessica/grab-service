@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jessi.grabservice.R
 import com.jessi.grabservice.model.AppInfoLoadStatus
+import com.jessi.grabservice.proxy.ProxyHelper
 import com.jessi.grabservice.ui.DividerLine
 import com.jessi.grabservice.ui.page.widget.DoubleSwitchLine
 import com.jessi.grabservice.ui.page.widget.SingleSwitchLine
@@ -44,6 +45,9 @@ import com.jessi.grabservice.ui.upperHalfConerBackground
 import com.jessi.grabservice.utils.Logger
 import com.jessi.grabservice.utils.getAppIconDrawable
 import com.jessi.grabservice.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import top.sankokomi.wirebare.kernel.common.WireBareHelper
 
 const val CONTROL_PAGE_NAME = "控制面板"
 
@@ -56,6 +60,7 @@ interface IControlPageCallback {
 fun ControlPage(
     context: Context,
     viewModel: MainViewModel,
+    proxyHelper: ProxyHelper,
     callback: IControlPageCallback,
 ) {
 
@@ -63,6 +68,7 @@ fun ControlPage(
 
     val enableGrab by viewModel.enableGrab.collectAsState()
     val enableAutoFilter by viewModel.enableAutoFilter.collectAsState()
+    val enableSSL by viewModel.enableSSL.collectAsState()
     val enableHibernateLock by viewModel.enableHibernateLock.collectAsState()
     val enableShowSystemApp by viewModel.filterSystemApp.collectAsState()
     var enableAllSelect by remember { mutableStateOf(false) }
@@ -77,6 +83,17 @@ fun ControlPage(
     LaunchedEffect(Unit) {
         viewModel.prepareAppInfos(context)
     }
+
+    // 检测证书是否可信
+    var systemTrustCert by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        if (enableSSL) {
+            withContext(Dispatchers.IO){
+                systemTrustCert = WireBareHelper.checkSystemTrustCert(proxyHelper.wireBareJKS)
+            }
+        }
+    }
+
 
     val checkEnableAllSelect: (() -> Boolean) = {
         var isAllSelect = true
@@ -134,6 +151,7 @@ fun ControlPage(
 
                 // 自动过滤
                 DoubleSwitchLine(
+                    enable = !enableGrab,
                     drawableRes = R.drawable.ic_filter,
                     firstText = stringResource(R.string.auto_filter),
                     secondText = stringResource(R.string.filter_content),
@@ -158,6 +176,31 @@ fun ControlPage(
                         Logger.i("休眠锁开关: $enableHibernateLock -> $it")
                         viewModel.enableHibernateLock(it)
                         callback.onHibernateLockSelect(it)
+                    }
+                )
+
+                DividerLine()
+
+                // SSL/TLS
+                DoubleSwitchLine(
+                    enable = !enableGrab,
+                    drawableRes = R.drawable.ic_ssl,
+                    firstText = stringResource(R.string.common_ssl),
+                    secondText = if (enableSSL && !systemTrustCert) {
+                        stringResource(R.string.ssl_warning)
+                    } else {
+                        stringResource(R.string.ssl_content)
+                    },
+                    secondTextColor = if (enableSSL && !systemTrustCert) {
+                        ThemeManager.colorTheme.errorText
+                    } else {
+                        ThemeManager.colorTheme.secondText
+                    },
+                    colorFilter = ColorFilter.tint(ThemeManager.colorTheme.defaultFilterColor),
+                    checked = enableSSL,
+                    onCheckedChange = {
+                        Logger.i("启用SSL/TLS: $enableSSL -> $it")
+                        viewModel.enableSSL(it)
                     }
                 )
             }
@@ -251,7 +294,7 @@ fun ControlPage(
                     ) {
                         Text(
                             text = stringResource(R.string.change_app_select_while_switch_off),
-                            color = ThemeManager.colorTheme.warningText,
+                            color = ThemeManager.colorTheme.tipText,
                             fontSize = 16.sp,
                             maxLines = 2
                         )

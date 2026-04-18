@@ -5,7 +5,8 @@ import androidx.compose.ui.graphics.Color
 interface ColorTheme {
     val globalText: Color get() = Color(0xFF000000)
     val secondText: Color get() = Color(0xFFB6B6B6)
-    val warningText: Color get() = Color(0xFF0000FF)
+    val errorText: Color get() = Color(0xCCFF0000)
+    val tipText: Color get() = Color(0xFF0000FF)
     val defaultFilterColor: Color get() = Color(0xFF000000)
     val backgroundColor: Color get() = Color(0xFFEDEDED)
     val cardBackgroundColor: Color get() = Color(0xFFFDFDFD)
@@ -25,7 +26,7 @@ val LightColorTheme = DefaultColorTheme()
 val DarkColorTheme = object : DefaultColorTheme() {
     override val globalText: Color get() = Color(0xFFFFFFFF)
     override val secondText: Color get() = Color(0xFFB8B8B8)
-    override val warningText: Color get() = Color(0xCCFF0000)
+    override val tipText: Color get() = Color(0xCCFF0000)
     override val defaultFilterColor: Color get() = Color(0xFFFFFFFF)
     override val backgroundColor: Color get() = Color(0xFF1A1A1A)
     override val cardBackgroundColor: Color get() = Color(0xFF242424)

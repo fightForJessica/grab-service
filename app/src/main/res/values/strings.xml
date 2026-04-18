@@ -12,7 +12,9 @@
     <string name="request_empty">还没有请求信息哦~</string>
     <string name="response_empty">还没有响应信息哦~</string>
     <string name="common_ssl">SSL/TLS</string>
-    <string name="change_app_select_while_switch_off">抓取服务开启时无法变更抓取应用</string>
+    <string name="ssl_content">启用后会解析HTTPS数据包</string>
+    <string name="ssl_warning">检测到系统未信任代理服务器证书</string>
+    <string name="change_app_select_while_switch_off">抓取服务开启时无法变更抓取应用和抓取设置</string>
     <string name="request_url">请求链接</string>
     <string name="request_time">请求时间</string>
     <string name="uid">UID</string>
