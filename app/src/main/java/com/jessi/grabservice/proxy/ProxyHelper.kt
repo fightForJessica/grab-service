@@ -79,6 +79,7 @@ class ProxyHelper(
         }
         viewModel.enableGrab(true)
         Logger.i("启动抓取服务, selectAppPackageList: $selectAppPackageList")
+        activity.showToast("抓取服务启动成功")
         startProxy(
             targetPackageNameArray = selectAppPackageList.toTypedArray(),
             onRequest = {
