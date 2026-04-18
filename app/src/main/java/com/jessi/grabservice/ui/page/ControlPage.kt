@@ -144,7 +144,6 @@ fun ControlPage(
                     checked = enableGrab,
                     onCheckedChange = {
                         Logger.i("总开关: $enableGrab -> $it")
-                        viewModel.enableGrab(it)
                         callback.onMainSwitchSelect(it)
                     }
                 )

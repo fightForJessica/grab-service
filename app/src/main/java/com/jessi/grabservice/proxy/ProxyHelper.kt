@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import com.jessi.grabservice.utils.Logger
+import com.jessi.grabservice.utils.showToast
 import com.jessi.grabservice.viewmodel.MainViewModel
 import top.sankokomi.wirebare.kernel.common.WireBare
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpSession
@@ -29,6 +30,8 @@ class ProxyHelper(
                 if (result.resultCode == Activity.RESULT_OK) {
                     realStartGrabService()
                 } else {
+                    viewModel.enableGrab(false)
+                    activity.showToast("启动失败，请检查是否授予VPN权限")
                     Logger.e("VPN 服务启动失败")
                 }
             }
@@ -69,6 +72,12 @@ class ProxyHelper(
         }.filter {
             !it.isEmpty()
         }
+        if (selectAppPackageList.isEmpty()) {
+            Logger.i("没有选择目标抓取应用，不启动服务")
+            activity.showToast("启动需要先选择抓包应用程序")
+            return
+        }
+        viewModel.enableGrab(true)
         Logger.i("启动抓取服务, selectAppPackageList: $selectAppPackageList")
         startProxy(
             targetPackageNameArray = selectAppPackageList.toTypedArray(),
@@ -83,6 +92,7 @@ class ProxyHelper(
 
     fun stopGrabService() {
         Logger.i("停止抓取服务")
+        viewModel.enableGrab(false)
         WireBare.stopProxy()
     }
 

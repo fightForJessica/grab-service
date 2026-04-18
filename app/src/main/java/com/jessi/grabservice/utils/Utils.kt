@@ -2,11 +2,19 @@ package com.jessi.grabservice.utils
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.widget.Toast
 import com.jessi.grabservice.model.HttpReq
 import com.jessi.grabservice.model.HttpRsp
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpRequest
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpResponse
 import top.sankokomi.wirebare.kernel.interceptor.http.HttpSession
+
+private var toast: Toast? = null
+fun Context.showToast(msg: String, duration: Int = Toast.LENGTH_SHORT) {
+    toast?.cancel()
+    toast = Toast.makeText(this, msg, duration)
+    toast?.show()
+}
 
 fun Context.getAppIconDrawable(packageName: String): Drawable {
     return packageManager.getApplicationIcon(packageName)
