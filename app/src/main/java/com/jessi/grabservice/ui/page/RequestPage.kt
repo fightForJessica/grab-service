@@ -54,19 +54,17 @@ fun RequestPage(
                 it.uid == request.sourceProcessUid
             }
             require(targetAppInfo != null)
-            val modifier = when {
-                requestList.size == 1 -> {
-                    Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+            val modifier = when (index) {
+                0 -> {
+                    if (requestList.size == 1) {
+                        Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                    } else {
+                        Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                    }
                 }
-
-                index == 0 -> {
-                    Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                }
-
-                index == requestList.size - 1 -> {
+                requestList.size - 1 -> {
                     Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
-
                 else -> {
                     Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
                 }

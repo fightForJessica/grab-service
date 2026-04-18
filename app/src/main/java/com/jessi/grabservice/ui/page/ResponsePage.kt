@@ -54,19 +54,17 @@ fun ResponsePage(
                 it.uid == response.sourceProcessUid
             }
             require(targetAppInfo != null)
-            val modifier = when {
-                responseList.size == 1 -> {
-                    Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+            val modifier = when (index) {
+                0 -> {
+                    if (responseList.size == 1) {
+                        Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                    } else {
+                        Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                    }
                 }
-
-                index == 0 -> {
-                    Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
-                }
-
-                index == responseList.size - 1 -> {
+                responseList.size - 1 -> {
                     Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
                 }
-
                 else -> {
                     Modifier.background(ThemeManager.colorTheme.cardBackgroundColor)
                 }

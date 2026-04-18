@@ -267,7 +267,11 @@ fun ControlPage(
                     val appInfo = targetAppInfos[index]
                     val modifier = when (index) {
                         0 -> {
-                            Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            if (targetAppInfos.size == 1) {
+                                Modifier.cardBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            } else {
+                                Modifier.upperHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
+                            }
                         }
                         targetAppInfos.size - 1 -> {
                             Modifier.lowerHalfConerBackground(ThemeManager.colorTheme.cardBackgroundColor)
