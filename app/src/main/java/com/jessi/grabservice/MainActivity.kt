@@ -18,6 +18,8 @@ import com.jessi.grabservice.model.HttpRsp
 import com.jessi.grabservice.proxy.ProxyHelper
 import com.jessi.grabservice.ui.IMainContentCallback
 import com.jessi.grabservice.ui.Main
+import com.jessi.grabservice.ui.detail.REQUEST_DETAIL_PAGE_NAME
+import com.jessi.grabservice.ui.detail.RESPONSE_DETAIL_PAGE_NAME
 import com.jessi.grabservice.ui.theme.ThemeManager
 import com.jessi.grabservice.utils.Logger
 import com.jessi.grabservice.viewmodel.MainViewModel
@@ -77,14 +79,24 @@ class MainActivity : ComponentActivity() {
                             request: HttpReq,
                             appInfo: AppInfo
                         ) {
-                            openContentDetailPage(appInfo, request, null, 0)
+                            openContentDetailPage(
+                                appInfo = appInfo,
+                                request = request,
+                                response = null,
+                                initPageName = REQUEST_DETAIL_PAGE_NAME
+                            )
                         }
 
                         override fun onResponseItemClick(
                             response: HttpRsp,
                             appInfo: AppInfo
                         ) {
-                            openContentDetailPage(appInfo, null, response, 1)
+                            openContentDetailPage(
+                                appInfo = appInfo,
+                                request = null,
+                                response = response,
+                                initPageName = RESPONSE_DETAIL_PAGE_NAME
+                            )
                         }
                     }
                 )
@@ -113,7 +125,7 @@ class MainActivity : ComponentActivity() {
         appInfo: AppInfo,
         request: HttpReq?,
         response: HttpRsp?,
-        initPageIndex: Int
+        initPageName: String
     ) {
         val intent = Intent(this, DetailActivity::class.java).apply {
             putExtra(DetailActivity.KEY_APP_INFO, appInfo)
@@ -123,7 +135,7 @@ class MainActivity : ComponentActivity() {
             if (response != null) {
                 putExtra(DetailActivity.KEY_RESPONSE, response)
             }
-            putExtra(DetailActivity.KEY_INIT_PAGE_INDEX, initPageIndex)
+            putExtra(DetailActivity.KEY_INIT_PAGE_NAME, initPageName)
         }
         startActivity(intent)
     }

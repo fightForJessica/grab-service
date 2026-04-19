@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.jessi.grabservice.model.AppInfo
 import com.jessi.grabservice.model.HttpReq
@@ -22,7 +21,7 @@ class DetailActivity : ComponentActivity() {
         const val KEY_APP_INFO = "key_app_info"
         const val KEY_REQUEST = "key_request"
         const val KEY_RESPONSE = "key_response"
-        const val KEY_INIT_PAGE_INDEX = "key_init_page_index"
+        const val KEY_INIT_PAGE_NAME = "key_init_page_name"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class DetailActivity : ComponentActivity() {
         require(appInfo != null)
         val request = intent.getParcelableExtra(KEY_REQUEST) as? HttpReq
         val response = intent.getParcelableExtra(KEY_RESPONSE) as? HttpRsp
-        val initPageIndex = intent.getIntExtra(KEY_INIT_PAGE_INDEX, 0)
+        val initPageName = intent.getStringExtra(KEY_INIT_PAGE_NAME).orEmpty()
         setContent {
 
             // 主题色适配
@@ -49,7 +48,7 @@ class DetailActivity : ComponentActivity() {
                     appInfo = appInfo,
                     request = request,
                     response = response,
-                    initPageIndex = initPageIndex
+                    initPageName = initPageName
                 )
 
             }

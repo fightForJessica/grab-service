@@ -47,7 +47,7 @@ fun Detail(
     appInfo: AppInfo,
     request: HttpReq?,
     response: HttpRsp?,
-    initPageIndex: Int
+    initPageName: String
 ) {
     // todo 加入 request 和 response 的联动
     var request by remember { mutableStateOf(request) }
@@ -55,11 +55,21 @@ fun Detail(
 
     val scope = rememberCoroutineScope()
 
-    val tabList = listOf(
-        TabModel(REQUEST_DETAIL_PAGE_NAME, R.drawable.ic_request_detail_page),
-        TabModel(RESPONSE_DETAIL_PAGE_NAME, R.drawable.ic_response_detail_page)
-    )
-    var selectIndex by remember { mutableIntStateOf(initPageIndex) }
+    val tabList = mutableListOf<TabModel>()
+    if (request != null) {
+        tabList.add(
+            TabModel(REQUEST_DETAIL_PAGE_NAME, R.drawable.ic_request_detail_page)
+        )
+    }
+    if (response != null) {
+        tabList.add(
+            TabModel(RESPONSE_DETAIL_PAGE_NAME, R.drawable.ic_response_detail_page)
+        )
+    }
+
+    var selectIndex by remember {
+        mutableIntStateOf(tabList.indexOfFirst { it.tabName == initPageName })
+    }
 
     val titleText by remember(selectIndex) {
         mutableStateOf(tabList[selectIndex].tabName)
@@ -113,8 +123,8 @@ fun Detail(
             beyondViewportPageCount = 1,
             userScrollEnabled = true
         ) { pageIndex ->
-            when (pageIndex) {
-                0 -> {
+            when (tabList[pageIndex].tabName) {
+                REQUEST_DETAIL_PAGE_NAME -> {
                     RequestDetailPage(
                         context = context,
                         appInfo = appInfo,
@@ -124,7 +134,7 @@ fun Detail(
                         }
                     )
                 }
-                1 -> {
+                RESPONSE_DETAIL_PAGE_NAME -> {
                     ResponseDetailPage(
                         context = context,
                         appInfo = appInfo,
